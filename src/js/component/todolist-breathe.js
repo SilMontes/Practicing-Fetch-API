@@ -7,15 +7,31 @@ export function Todos() {
 	useEffect(
 		() =>
 			// here i fetch my todos from the API
-			fetch(
-				"https://assets.breatheco.de/apis/fake/todos/user/alesanchezr"
-			)
+			fetch("https://assets.breatheco.de/apis/fake/todos/user/newuser")
 				.then(r => r.json()) //convert incoming JSON formated response into an object
-				.then(data => setTasks(data)), //here it re-set the variable tasks with the incoming data
+				.then(
+					data => setTasks(data) //here it re-set the variable tasks with the incoming data
+				),
 		[] // <---- thanks to this empty array the use effect will be called only once
 	);
+
+	//    { useEffect(() => {
+	//   async function fetchData() {
+	//     // You can await here
+	//     const response = await MyAPI.getData(someId);
+	//     // ...
+	//   }
+	//   fetchData();
+	// }, [someId]); // Or [] if effect doesn't need props or state
+	// }
+	const deletetask = i => {
+		const updateTask = tasks.filter((item, index) => {
+			return index != i;
+		});
+		setTasks(updateTask);
+	};
 	return (
-		<div>
+		<div className="container">
 			<input
 				onKeyUp={e =>
 					//listen to the key up and wait for the return key to be pressed (KeyCode === 13)
@@ -29,9 +45,11 @@ export function Todos() {
 				{tasks === null
 					? "Loading..."
 					: tasks.map((t, i) => {
-							<li key={i}>
-								{t.label} ({t.done ? "done" : "not done"})
-							</li>;
+							return (
+								<li key={i} onClick={() => deletetask(i)}>
+									{t.label} ({t.done ? "done" : "not done"})
+								</li>
+							);
 					  })}
 			</ul>
 		</div>
